@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  jhipster-app:
+    image: jhipster/jhipster:latest
+    container_name: jhipster-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/jhipster
+      - SPRING_DATASOURCE_USERNAME=jhipster
+      - SPRING_DATASOURCE_PASSWORD=mysecretpassword
+    depends_on:
+      - postgres
+    networks:
+      - jhipster-network
+
+  postgres:
+    image: postgres:13
+    container_name: jhipster-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=jhipster
+      - POSTGRES_USER=jhipster
+      - POSTGRES_PASSWORD=mysecretpassword
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - jhipster-network
+
+networks:
+  jhipster-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
